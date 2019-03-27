@@ -1,23 +1,23 @@
-{{- if .Values.ingress.dashboard.enabled -}}
+{{- if .Values.ingress.webui.enabled -}}
 {{- $fullName := include "sensu-go-helm.fullname" . -}}
-{{- $ingressPath := .Values.ingress.dashboard.path -}}
+{{- $ingressPath := .Values.ingress.webui.path -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}-dashboard
+  name: {{ $fullName }}-webui
   labels:
     app: {{ template "sensu-go-helm.name" . }}
     chart: {{ template "sensu-go-helm.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- with .Values.ingress.dashboard.annotations }}
+{{- with .Values.ingress.webui.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-{{- if .Values.ingress.dashboard.tls }}
+{{- if .Values.ingress.webui.tls }}
   tls:
-  {{- range .Values.ingress.dashboard.tls }}
+  {{- range .Values.ingress.webui.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . }}
@@ -26,13 +26,13 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.ingress.dashboard.hosts }}
+  {{- range .Values.ingress.webui.hosts }}
     - host: {{ . }}
       http:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: "{{ $fullName }}-dashboard"
+              serviceName: "{{ $fullName }}-webui"
               servicePort: 3000
   {{- end }}
 {{- end }}
